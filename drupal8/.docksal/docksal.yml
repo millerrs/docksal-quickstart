@@ -28,6 +28,8 @@ services:
     command: mysqld --max-allowed-packet=1G
     ports:
       - "${MYSQL_PORT_MAPPING:-3306}"
+    volumes:
+      - ${PROJECT_ROOT}/data:/docker-entrypoint-initdb.d:ro
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - MYSQL_USER=${MYSQL_USER:-user}
