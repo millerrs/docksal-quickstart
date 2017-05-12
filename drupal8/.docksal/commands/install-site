@@ -1,0 +1,15 @@
+#!/bin/bash
+
+## Installs Drupal using the default db
+##
+## Usage: fin install-site
+
+if [ "$DOCKER_RUNNING" == false ]; then
+        echo "Docker is not running. Starting containers."
+        fin up
+fi
+
+cd $PROJECT_ROOT/$DOCROOT &&
+     IP=$(fin vm ip) &&
+     fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
+     fin drush uli
