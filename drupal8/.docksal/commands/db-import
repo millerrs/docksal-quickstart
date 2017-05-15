@@ -1,0 +1,23 @@
+#!/bin/bash
+
+## Imports database into container
+##
+## Usage: fin db-import [path to db]
+
+# Colors
+  GREEN='\033[0;32m'
+  NC='\033[0m'
+
+  if [[ $# -eq 0 ]] ; then
+      echo "You need to include the path to your *.sql file"
+      echo
+      echo -e "${GREEN}Example:${NC}"
+      echo "fin db-import ../../data/My-Site.sql"
+      exit 1
+  fi
+
+  if [ `which pv` ] ; then
+    pv $1 | fin sqli $1
+  else
+    fin sqli $1
+  fi
