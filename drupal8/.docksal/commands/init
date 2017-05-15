@@ -4,7 +4,8 @@
 ##
 ## Usage: fin init
 
-# Check for running containers
+#-------------------- Docker Check ----------------------------
+
 if [ "$DOCKER_RUNNING" == true ]; then
         echo "Docker is running.  Resetting services."
         fin reset -f
@@ -13,7 +14,11 @@ else
         fin up
 fi
 
-# Check for composer
+#--------------------- END: Docker Check -----------------------
+
+
+#--------------------- Composer Install ------------------------
+
 if [ 'which composer' ]; then
         echo "Installing all libraries and dependencies."
         composer install
@@ -22,8 +27,14 @@ else
         exit 1
 fi
 
-# Install the site via drush
+#--------------------- END: Composer Install --------------------
+
+
+#--------------------- Site Install -----------------------------
+
 cd $PROJECT_ROOT/$DOCROOT &&
      IP=$(fin vm ip) &&
      fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
      fin drush uli
+
+#--------------------- END: Site Install ------------------------
