@@ -1,0 +1,8 @@
+#!/bin/bash
+
+## Configures database into container
+##
+## Usage: fin db-configure [optional params]
+
+cd $PROJECT_ROOT/$DOCROOT &&
+     fin drush updb $1
