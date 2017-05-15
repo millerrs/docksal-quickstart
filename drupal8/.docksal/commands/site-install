@@ -1,14 +1,28 @@
 #!/bin/bash
 
-## Installs Drupal using the default db
+## Initializes the site
 ##
-## Usage: fin site-install
+## Usage: fin init
 
-if [ "$DOCKER_RUNNING" == false ]; then
+# Check for running containers
+if [ "$DOCKER_RUNNING" == true ]; then
+        echo "Docker is running.  Resetting services."
+        fin reset -f
+else
         echo "Docker is not running. Starting containers."
         fin up
 fi
 
+# Check for composer
+if [ 'which composer' ]; then
+        echo "Installing all libraries and dependencies."
+        composer install
+else
+        echo "Unable to determine if composer is installed. Aborting install."
+        exit 1
+fi
+
+# Install the site via drush
 cd $PROJECT_ROOT/$DOCROOT &&
      IP=$(fin vm ip) &&
      fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
