@@ -2,7 +2,7 @@
 
 ## Installs Drupal using the default db
 ##
-## Usage: fin install-site
+## Usage: fin site-install
 
 if [ "$DOCKER_RUNNING" == false ]; then
         echo "Docker is not running. Starting containers."
