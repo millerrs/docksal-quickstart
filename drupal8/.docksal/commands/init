@@ -9,8 +9,40 @@
 
 DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
 PARENT_PATH="$(dirname "$DOCROOT_PATH")"
+SITEDIR_PATH="${DOCROOT_PATH}/sites/"
+EXAMPLE_SETTINGS="${SITEDIR_PATH}/example.settings.local.php"
+LOCAL_SETTINGS="${SITEDIR_PATH}/default/settings.local.php"
+BACKUPS_PATH="${PROJECT_ROOT}/.docksal/data"
 
 #-------------------- END: Paths ------------------------------
+
+
+#-------------------- Helpers ---------------------------------
+
+add_local_settings ()
+{
+
+	if [ ! -f ${LOCAL_SETTINGS} ]; then
+        echo "Creating a local settings file."
+        cp ${EXAMPLE_SETTINGS} ${LOCAL_SETTINGS}
+  fi
+
+}
+
+create_backup_dir ()
+{
+  if [ ! -d ${BACKUPS_PATH} ]; then
+        echo "Creating a data directory."
+        mkdir ${BACKUPS_PATH}
+  fi
+}
+
+fix_permissions ()
+{
+	chmod 755 "${SITEDIR_PATH}/default"
+}
+
+#-------------------- END: Helpers -----------------------------
 
 
 #-------------------- Docker Check ----------------------------
@@ -38,6 +70,15 @@ else
 fi
 
 #--------------------- END: Composer Install --------------------
+
+
+#--------------------- Install Prep -----------------------------
+
+fix_permissions
+add_local_settings
+create_backup_dir
+
+#--------------------- END: Install Prep ------------------------
 
 
 #--------------------- Site Install -----------------------------
