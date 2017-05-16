@@ -42,6 +42,19 @@ fix_permissions ()
 	chmod 755 "${SITEDIR_PATH}/default"
 }
 
+get_latest_db ()
+{
+
+  if [ command -v terminus >/dev/null 2>&1 ]; then
+        echo "Unable to determine if terminus is installed. Aborting install."
+        exit 1;
+  fi
+
+  terminus auth:login
+  terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
+
+}
+
 #-------------------- END: Helpers -----------------------------
 
 
@@ -87,5 +100,10 @@ cd ${DOCROOT_PATH} &&
      IP=$(fin vm ip) &&
      fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
      fin drush uli
+
+if [ -n "$PANTHEON_SITE" ]; then
+        echo "Attempting to grab the db from Pantheon."
+        get_latest_db && gunzip < ${BACKUPS_PATH}/latest.tar.gz | fin sqli
+fi
 
 #--------------------- END: Site Install ------------------------
