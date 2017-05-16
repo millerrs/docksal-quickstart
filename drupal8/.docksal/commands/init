@@ -5,6 +5,14 @@
 ## Usage: fin init
 
 
+#-------------------- Paths -----------------------------------
+
+DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
+PARENT_PATH="$(dirname "$DOCROOT_PATH")"
+
+#-------------------- END: Paths ------------------------------
+
+
 #-------------------- Docker Check ----------------------------
 
 if [ "$DOCKER_RUNNING" == true ]; then
@@ -21,6 +29,7 @@ fi
 #--------------------- Composer Install ------------------------
 
 if [ 'which composer' ]; then
+        cd ${PARENT_PATH}
         echo "Installing all libraries and dependencies."
         composer install
 else
@@ -33,7 +42,7 @@ fi
 
 #--------------------- Site Install -----------------------------
 
-cd $PROJECT_ROOT/$DOCROOT &&
+cd ${DOCROOT_PATH} &&
      IP=$(fin vm ip) &&
      fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
      fin drush uli
