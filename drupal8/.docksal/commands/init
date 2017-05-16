@@ -76,7 +76,7 @@ fi
 if [ 'which composer' ]; then
         cd ${PARENT_PATH}
         echo "Installing all libraries and dependencies."
-        composer install
+        composer install --no-dev
 else
         echo "Unable to determine if composer is installed. Aborting install."
         exit 1
