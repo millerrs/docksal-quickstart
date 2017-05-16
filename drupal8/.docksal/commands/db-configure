@@ -4,6 +4,7 @@
 ##
 ## Usage: fin db-configure [optional params]
 
+
 #--------------------- DB Config -----------------------------
 
 cd $PROJECT_ROOT/$DOCROOT &&

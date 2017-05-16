@@ -4,6 +4,7 @@
 ##
 ## Usage: fin db-import [path to db]
 
+
 #--------------------- Colors ------------------------
 
   GREEN='\033[0;32m'

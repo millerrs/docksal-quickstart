@@ -4,6 +4,7 @@
 ##
 ## Usage: fin init
 
+
 #-------------------- Docker Check ----------------------------
 
 if [ "$DOCKER_RUNNING" == true ]; then
