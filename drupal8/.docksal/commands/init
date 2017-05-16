@@ -4,6 +4,7 @@
 ##
 ## Usage: fin init
 
+set -e
 
 #-------------------- Paths -----------------------------------
 
@@ -31,10 +32,12 @@ add_local_settings ()
 
 create_backup_dir ()
 {
+
   if [ ! -d ${BACKUPS_PATH} ]; then
         echo "Creating a data directory."
         mkdir ${BACKUPS_PATH}
   fi
+
 }
 
 fix_permissions ()
@@ -45,13 +48,8 @@ fix_permissions ()
 get_latest_db ()
 {
 
-  if [ command -v terminus >/dev/null 2>&1 ]; then
-        echo "Unable to determine if terminus is installed. Aborting install."
-        exit 1;
-  fi
-
-  terminus auth:login
-  terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
+ terminus auth:login
+ terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
 
 }
 
@@ -73,14 +71,9 @@ fi
 
 #--------------------- Composer Install ------------------------
 
-if [ 'which composer' ]; then
-        cd ${PARENT_PATH}
-        echo "Installing all libraries and dependencies."
+cd ${PARENT_PATH} &&
+        echo "Installing all libraries and dependencies." &&
         composer install --no-dev
-else
-        echo "Unable to determine if composer is installed. Aborting install."
-        exit 1
-fi
 
 #--------------------- END: Composer Install --------------------
 
