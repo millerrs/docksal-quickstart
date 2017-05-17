@@ -48,8 +48,12 @@ fix_permissions ()
 get_latest_db ()
 {
 
- terminus auth:login
- terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
+   if command -v terminus > /dev/null 2>&1; then
+        terminus auth:login
+        terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
+   else
+        echo "Cannot find terminus.  Check that it has been installed."
+   fi
 
 }
 
