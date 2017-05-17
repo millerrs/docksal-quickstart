@@ -7,7 +7,7 @@
 
 #--------------------- DB Config -----------------------------
 
-cd $PROJECT_ROOT/$DOCROOT &&
-     fin drush updb $1
+cd $PROJECT_ROOT/$DOCROOT
+fin drush updb $1
 
 #--------------------- END: DB Config ------------------------
