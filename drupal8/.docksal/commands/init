@@ -57,6 +57,16 @@ get_latest_db ()
 
 }
 
+move_latest_backup ()
+{
+
+  if [ -f ${BACKUPS_PATH}/latest.tar.gz ]; then
+        day=$(date +%Y-%m-%d_T_%H-%M-%S)
+        mv ${BACKUPS_PATH}/latest.tar.gz{,-${day}}
+  fi
+
+}
+
 #-------------------- END: Helpers -----------------------------
 
 
@@ -94,13 +104,15 @@ create_backup_dir
 #--------------------- Site Install -----------------------------
 
 cd ${DOCROOT_PATH} &&
-     IP=$(fin vm ip) &&
-     fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
-     fin drush uli
+       IP=$(fin vm ip) &&
+       fin drush site-install --db-url=mysql://user:user@$IP:33061/default &&
+       fin drush uli
 
 if [ -n "$PANTHEON_SITE" ]; then
-        echo "Attempting to grab the db from Pantheon."
-        get_latest_db && gunzip < ${BACKUPS_PATH}/latest.tar.gz | fin sqli
+       echo "Attempting to grab the db from Pantheon."
+       move_latest_backup &&
+       get_latest_db &&
+       gunzip < ${BACKUPS_PATH}/latest.tar.gz | fin sqli
 fi
 
 #--------------------- END: Site Install ------------------------
