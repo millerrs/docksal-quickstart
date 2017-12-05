@@ -105,12 +105,13 @@ create_backup_dir
 #--------------------- Site Install -----------------------------
 
 cd ${DOCROOT_PATH}
-IP=$(fin vm ip)
-fin drush site-install --db-url=mysql://user:user@$IP:33061/default
 
 if [ -n "$PANTHEON_SITE" ]; then
   echo "Attempting to grab the db from Pantheon."
   move_latest_backup && get_latest_db && gunzip < ${BACKUPS_PATH}/latest.tar.gz | fin sqli
+else
+  IP=$(fin vm ip)
+  fin drush site-install --db-url=mysql://user:user@$IP:33061/default
 fi
 
 fin drush uli
