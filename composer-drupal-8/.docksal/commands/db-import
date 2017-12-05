@@ -15,7 +15,7 @@
 
 #--------------------- DB Import -----------------------
 
-if [[ $# -eq 0 ]] ; then
+if [[ $# -eq 0 ]]; then
       echo "You need to include the path to your *.sql file"
       echo
       echo -e "${GREEN}Example:${NC}"
@@ -23,7 +23,7 @@ if [[ $# -eq 0 ]] ; then
       exit 1
 fi
 
-if [ 'which pv' ] ; then
+if [ 'which pv' ]; then
       pv $1 | fin sqli $1
 else
       fin sqli $1
