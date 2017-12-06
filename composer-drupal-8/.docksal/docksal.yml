@@ -70,3 +70,11 @@ services:
     dns:
       - ${DOCKSAL_DNS1}
       - ${DOCKSAL_DNS2}
+
+  # Selenium
+  browser:
+    hostname: browser
+    image: selenium/standalone-firefox
+    dns:
+      - ${DOCKSAL_DNS1}
+      - ${DOCKSAL_DNS2}
