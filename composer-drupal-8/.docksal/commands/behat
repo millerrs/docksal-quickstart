@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#: exec_target = cli
+
+## Runs Behat tests.
+##
+## Usage: fin behat
+
+#-------------------- Paths -----------------------------------
+
+DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
+PARENT_PATH="$(dirname "$DOCROOT_PATH")"
+
+#-------------------- END: Paths ------------------------------
+
+
+#-------------------- Helpers ---------------------------------
+
+check_behat_install ()
+{
+
+  if [ ! -f "vendor/bin/behat" ]; then
+    echo "Behat is not installed as a composer dependency."
+    exit 1
+  fi
+
+}
+
+check_behat_config ()
+{
+
+  if [ ! -f "tests/behat/behat.yml" ]; then
+    echo "The behat.yml file does not exist in tests/behat."
+    exit 1
+  fi
+
+}
+
+#-------------------- END: Helpers -----------------------------
+
+#-------------------- Run Behat --------------------------------
+
+cd ${PARENT_PATH}
+check_behat_install
+check_behat_config
+fin exec "cd tests/behat && ../../vendor/bin/behat"
+
+#-------------------- END: Run Behat ---------------------------
