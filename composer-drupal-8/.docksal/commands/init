@@ -88,7 +88,7 @@ fi
 
 cd ${PARENT_PATH}
 echo "Installing all libraries and dependencies."
-composer install --no-dev
+composer install
 
 #--------------------- END: Composer Install --------------------
 
