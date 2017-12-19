@@ -8,13 +8,14 @@ services:
     hostname: web
     image: docksal/web:2.1-apache2.4
     volumes:
-      # Project root volume
-      - project_root:/var/www:ro
+      - project_root:/var/www:ro,nocopy
     labels:
       - io.docksal.virtual-host=${VIRTUAL_HOST},*.${VIRTUAL_HOST}
       - io.docksal.project-root=${PROJECT_ROOT}
     environment:
       - APACHE_DOCUMENTROOT=/var/www/${DOCROOT:-docroot}
+      - APACHE_BASIC_AUTH_USER
+      - APACHE_BASIC_AUTH_PASS
     depends_on:
       - cli
     dns:
@@ -28,6 +29,8 @@ services:
     command: mysqld --max-allowed-packet=1G
     ports:
       - "${MYSQL_PORT_MAPPING:-3306}"
+    volumes:
+      - project_root:/var/www:ro,nocopy
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - MYSQL_USER=${MYSQL_USER:-user}
@@ -43,14 +46,15 @@ services:
     hostname: cli
     image: docksal/cli:1.3-php7
     volumes:
-      # Project root volume
-      - project_root:/var/www:rw
-      # Host home volume (for SSH keys and other credentials).
-      - host_home:/.home:ro
-      # Shared ssh-agent socket
+      - project_root:/var/www:rw,nocopy
       - docksal_ssh_agent:/.ssh-agent:ro
+      - /home/docker
     environment:
+      - HOST_UID
+      - HOST_GID
+      - DOCROOT
       - XDEBUG_ENABLED=${XDEBUG_ENABLED:-0}
+      - XDEBUG_CONFIG=remote_connect_back=0 remote_host=${DOCKSAL_HOST_IP}
     dns:
       - ${DOCKSAL_DNS1}
       - ${DOCKSAL_DNS2}
