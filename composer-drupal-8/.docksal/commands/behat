@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#: exec_target = cli
-
 ## Runs Behat tests.
 ##
 ## Usage: fin behat
