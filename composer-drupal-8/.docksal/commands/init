@@ -49,7 +49,7 @@ fix_permissions ()
 get_latest_db ()
 {
 
-  if command -v terminus > /dev/null 2>&1; then
+  if [ -x "$(command -v terminus)" ]; then
     terminus auth:login
     terminus backup:get ${PANTHEON_SITE}.live --element=db --to=${BACKUPS_PATH}/latest.tar.gz
   else
