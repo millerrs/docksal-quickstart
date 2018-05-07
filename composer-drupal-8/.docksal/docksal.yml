@@ -44,7 +44,7 @@ services:
   # Used for all console commands and tools.
   cli:
     hostname: cli
-    image: docksal/cli:2.0-php7.1
+    image: docksal/cli:2.0-php7.2
     volumes:
       - project_root:/var/www:rw,nocopy
       - docksal_ssh_agent:/.ssh-agent:ro
