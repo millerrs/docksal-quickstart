@@ -69,6 +69,18 @@ move_latest_backup ()
 
 }
 
+run_post_install_steps ()
+{
+
+  echo "Running post-install operations."
+  fin drush -y cache-rebuild
+  fin drush -y updatedb
+  fin drush -y config-import
+  fin drush -y entup
+  fin drush uli
+
+}
+
 #-------------------- END: Helpers -----------------------------
 
 
@@ -115,6 +127,6 @@ else
   fin drush site-install --db-url=mysql://user:user@$IP:33061/default
 fi
 
-fin drush uli
+run_post_install_steps
 
 #--------------------- END: Site Install ------------------------
