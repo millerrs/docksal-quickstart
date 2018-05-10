@@ -2,6 +2,3 @@
 .idea
 docroot
 .DS_Store
-data/*
-data
-docksal-local.env

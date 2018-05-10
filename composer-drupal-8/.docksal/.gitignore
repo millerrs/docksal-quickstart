@@ -1,0 +1,3 @@
+# Ignore Docksal-related files & directories
+data/
+docksal-local.env
