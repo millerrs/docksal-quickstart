@@ -77,7 +77,6 @@ run_post_install_steps ()
   fin drush -y updatedb
   fin drush -y config-import
   fin drush -y entup
-  fin drush uli
 
 }
 
@@ -122,11 +121,11 @@ cd ${DOCROOT_PATH}
 if [ -n "$PANTHEON_SITE" ]; then
   echo "Attempting to grab the db from Pantheon."
   move_latest_backup && get_latest_db && gunzip < ${BACKUPS_PATH}/latest.tar.gz | fin sqli
+  run_post_install_steps
 else
   IP=$(fin vm ip)
-  fin drush site-install --db-url=mysql://user:user@$IP:33061/default
+  fin drush -y site-install standard --db-url=mysql://user:user@$IP:33061/default
+  fin drush uli
 fi
-
-run_post_install_steps
 
 #--------------------- END: Site Install ------------------------
