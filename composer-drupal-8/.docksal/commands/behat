@@ -27,8 +27,8 @@ check_behat_install ()
 check_behat_config ()
 {
 
-  if [ ! -f "tests/behat/behat.yml" ]; then
-    echo "The behat.yml file does not exist in tests/behat."
+  if [ ! -f "behat.yml" ]; then
+    echo "A behat.yml configuration file could not be found."
     exit 1
   fi
 
@@ -41,6 +41,6 @@ check_behat_config ()
 cd ${PARENT_PATH}
 check_behat_install
 check_behat_config
-fin exec "cd tests/behat && ../../vendor/bin/behat"
+fin exec "vendor/bin/behat -c behat.yml"
 
 #-------------------- END: Run Behat ---------------------------
