@@ -1,0 +1,26 @@
+#!/bin/bash
+
+## Updates site with latest composer, DB and config changes
+##
+## Usage: fin update
+
+
+#-------------------- Paths -------------------------
+
+DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
+PARENT_PATH="$(dirname "$DOCROOT_PATH")"
+
+#-------------------- END: Paths --------------------
+
+
+#--------------------- Update -----------------------
+
+  cd ${PARENT_PATH}
+  composer install
+  cd ${DOCROOT_PATH}
+  fin drush -y cache-rebuild
+  fin drush -y updatedb
+  fin drush -y config-import
+  fin drush -y entup
+
+#--------------------- END: Update ------------------
