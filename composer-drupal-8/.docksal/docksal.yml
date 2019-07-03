@@ -6,18 +6,20 @@ services:
   # Web
   web:
     hostname: web
-    image: docksal/web:2.1-apache2.4
+    image: ${WEB_IMAGE:-docksal/nginx:1.15-1.0}
     volumes:
       - project_root:/var/www:ro,nocopy
     labels:
-      - io.docksal.virtual-host=${VIRTUAL_HOST},*.${VIRTUAL_HOST}
+      - io.docksal.virtual-host=${VIRTUAL_HOST},*.${VIRTUAL_HOST},${VIRTUAL_HOST}.*
+      - io.docksal.cert-name=${VIRTUAL_HOST_CERT_NAME:-none}
       - io.docksal.project-root=${PROJECT_ROOT}
+      - io.docksal.permanent=${SANDBOX_PERMANENT:-false}
     environment:
-      - APACHE_DOCUMENTROOT=/var/www/${DOCROOT:-docroot}
-      - APACHE_BASIC_AUTH_USER
-      - APACHE_BASIC_AUTH_PASS
-    depends_on:
-      - cli
+      - NGINX_VHOST_PRESET=drupal
+      - NGINX_FCGI_HOST_PORT=cli:9000
+      - NGINX_SERVER_ROOT=/var/www/${DOCROOT}
+      - NGINX_BASIC_AUTH_USER
+      - NGINX_BASIC_AUTH_PASS
     dns:
       - ${DOCKSAL_DNS1}
       - ${DOCKSAL_DNS2}
@@ -31,6 +33,7 @@ services:
       - "${MYSQL_PORT_MAPPING:-3306}"
     volumes:
       - project_root:/var/www:ro,nocopy
+      - db_data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - MYSQL_USER=${MYSQL_USER:-user}
@@ -41,20 +44,25 @@ services:
       - ${DOCKSAL_DNS2}
 
   # CLI
-  # Used for all console commands and tools.
   cli:
     hostname: cli
-    image: docksal/cli:2.0-php7.2
+    image: ${CLI_IMAGE:-docksal/cli:2.6-php7.2}
     volumes:
       - project_root:/var/www:rw,nocopy
-      - docksal_ssh_agent:/.ssh-agent:ro
-      - /home/docker
+      - ${SSH_AUTH_SOCK:-docksal_ssh_agent}:${SSH_AUTH_SOCK:-/.ssh-agent}:ro
+      - cli_home:/home/docker
+    ports:
+      - "2223:22"
     environment:
       - HOST_UID
       - HOST_GID
       - DOCROOT
+      - VIRTUAL_HOST
       - XDEBUG_ENABLED=${XDEBUG_ENABLED:-0}
       - XDEBUG_CONFIG=remote_connect_back=0 remote_host=${DOCKSAL_HOST_IP}
+      - PHP_IDE_CONFIG=serverName=${VIRTUAL_HOST}
+      - DRUSH_ALLOW_XDEBUG=${XDEBUG_ENABLED:-0}
+      - SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-/.ssh-agent/proxy-socket}
     dns:
       - ${DOCKSAL_DNS1}
       - ${DOCKSAL_DNS2}
@@ -62,7 +70,13 @@ services:
   # Solr
   solr:
     hostname: solr
-    image: docksal/solr:1.0-solr4
+    image: ${SOLR_IMAGE:-docksal/solr:1.0-solr4}
+    volumes:
+      - project_root:/var/www:ro,nocopy
+    labels:
+      - io.docksal.virtual-host=solr.${VIRTUAL_HOST},solr.${VIRTUAL_HOST}.*
+      - io.docksal.virtual-port=8983
+      - io.docksal.cert-name=${VIRTUAL_HOST_CERT_NAME:-none}
     dns:
       - ${DOCKSAL_DNS1}
       - ${DOCKSAL_DNS2}
