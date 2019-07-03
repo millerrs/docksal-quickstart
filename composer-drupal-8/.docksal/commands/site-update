@@ -21,6 +21,5 @@ PARENT_PATH="$(dirname "$DOCROOT_PATH")"
   fin drush -y cache-rebuild
   fin drush -y updatedb
   fin drush -y config-import
-  fin drush -y entup
 
 #--------------------- END: Update ------------------
