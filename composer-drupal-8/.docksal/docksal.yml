@@ -46,7 +46,7 @@ services:
   # CLI
   cli:
     hostname: cli
-    image: ${CLI_IMAGE:-docksal/cli:2.6-php7.2}
+    image: ${CLI_IMAGE:-docksal/cli:2-php7.3}
     volumes:
       - project_root:/var/www:rw,nocopy
       - ${SSH_AUTH_SOCK:-docksal_ssh_agent}:${SSH_AUTH_SOCK:-/.ssh-agent}:ro
